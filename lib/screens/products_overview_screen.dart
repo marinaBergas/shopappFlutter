@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+// import 'package:shopapp/providers/cart.dart';
 import '../widgets/product_grid.dart';
+import '../widgets/badge.dart';
+import '../providers/cart.dart';
+import './cart_screen.dart';
+
 enum FilterOptions {
   favorites,
   all,
@@ -13,7 +19,7 @@ class ProductsOverviewScreen extends StatefulWidget {
 }
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
-  var _showFavoritesONly=false;
+  var _showFavoritesONly = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,13 +30,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
               setState(() {
-                              if (selectedValue == FilterOptions.favorites) {
-                _showFavoritesONly=true;
-              } else {
-                _showFavoritesONly=false;
-              }
+                if (selectedValue == FilterOptions.favorites) {
+                  _showFavoritesONly = true;
+                } else {
+                  _showFavoritesONly = false;
+                }
               });
-
             },
             itemBuilder: (_) => [
               const PopupMenuItem(
@@ -43,11 +48,21 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               ),
             ],
             icon: const Icon(Icons.more_vert),
-          )
+          ),
+          // Badge(child: IconButton(icon: const Icon(Icons.shopping_cart), onPressed: () {  },),)
+          Consumer<Cart>(
+              builder: (ctx, cartData, buttonChild) => CustomeBadge(
+                    value: cartData.itemCount.toString(),
+                    child: buttonChild!,
+                  ),
+                  child: IconButton(
+                      icon: const Icon(Icons.shopping_cart),
+                      onPressed: () {Navigator.of(context).pushNamed(CartScreen.routeName);},
+                    ),)
         ],
       ),
       //render item on the screen not all items
-      body:  ProductGrid(showFavoritesONly: _showFavoritesONly),
+      body: ProductGrid(showFavoritesONly: _showFavoritesONly),
     );
   }
 }
