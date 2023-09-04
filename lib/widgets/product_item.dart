@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../screens/product_details_screen.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
+
 class ProductItem extends StatelessWidget {
   const ProductItem({super.key});
 
@@ -19,7 +20,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-        final cart = Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
 
     //listTile=> listView/ gridTile=>gridView
     return ClipRRect(
@@ -27,15 +28,15 @@ class ProductItem extends StatelessWidget {
         child: GridTile(
           footer: GridTileBar(
             backgroundColor: Colors.black54,
-            leading:Consumer<Product>(
-                    builder: (ctx, product, child) => IconButton(
-                onPressed: () {
-                  product.toggleFavoriteStatus();
-                },
-                icon:  Icon(product.isFavorite
+            leading: Consumer<Product>(
+                builder: (ctx, product, child) => IconButton(
+                    onPressed: () {
+                      product.toggleFavoriteStatus();
+                    },
+                    icon: Icon(product.isFavorite
                         ? Icons.favorite
                         : Icons.favorite_border),
-                color: Theme.of(context).colorScheme.secondary)),
+                    color: Theme.of(context).colorScheme.secondary)),
             title: Text(
               product.title,
               textAlign: TextAlign.center,
@@ -43,6 +44,17 @@ class ProductItem extends StatelessWidget {
             trailing: IconButton(
               onPressed: () {
                 cart.addItem(product.id, product.title, product.price);
+                //Scaffold.of(context).openDrawer();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                  content:const Text(
+                    'added item to cart !',
+                  ),
+                  duration: const Duration(seconds: 2),
+                  action: SnackBarAction(label: 'UNDO', onPressed:(){
+                    cart.removeSingleItem(product.id);
+                  })
+                ));
               },
               icon: const Icon(Icons.shopping_cart),
               color: Theme.of(context).colorScheme.secondary,
