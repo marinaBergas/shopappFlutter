@@ -27,8 +27,8 @@
 //     print(json.decode(response.body));
 //   }
 
-//   Future<void> signup(String email, String password) async {
-//     return _authenticate(email, password, 'signupNewUser');
+//   Future<void> sighup(String email, String password) async {
+//     return _authenticate(email, password, 'sighupNewUser');
 //   }
 
 //   Future<void> login(String email, String password) async {
@@ -91,7 +91,7 @@ String? get userId{
     }
   }
 
-  Future<void> signup(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     return _authenticate(email, password, 'signUp');
   }
 

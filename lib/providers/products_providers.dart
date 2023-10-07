@@ -58,7 +58,7 @@ class Products with ChangeNotifier {
     return _items.where((productItem) => productItem.isFavorite).toList();
   }
 
-  // void showFavourites() {
+  // void showFavorites() {
   //   _showFavorites = true;
   //   notifyListeners();
   // }
@@ -72,9 +72,10 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser=false]) async {
+    final filterString=filterByUser?'orderBy="creatorId"&equalTo="$userId':'';
     var url = Uri.parse(
-        'https://flutter-1d3e8-default-rtdb.firebaseio.com/products.json?auth=$authToken&orderBy="creatorId"&equalTo="$userId"');
+        'https://flutter-1d3e8-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString"');
     try {
       final response = await http.get(url);
       print(json.decode(response.body));
@@ -88,8 +89,8 @@ class Products with ChangeNotifier {
       url = Uri.parse(
           'https://flutter-1d3e8-default-rtdb.firebaseio.com/userFavourite/$userId.json?auth=$authToken');
 
-      final favouriteResponse = await http.get(url);
-      final favData = json.decode(favouriteResponse.body);
+      final favoriteResponse = await http.get(url);
+      final favData = json.decode(favoriteResponse.body);
       extractedData?.forEach((productId, productData) {
         loadedProducts.add(Product(
             id: productId,

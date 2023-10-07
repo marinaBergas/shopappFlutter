@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../models/http_exception.dart';
 
-enum AuthMode { Signup, Login }
+enum AuthMode { SignUp, Login }
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
@@ -142,7 +142,7 @@ class AuthCardState extends State<AuthCard> {
         );
       } else {
         // Sign user up
-        await Provider.of<Auth>(context, listen: false).signup(
+        await Provider.of<Auth>(context, listen: false).signUp(
           _authData['email']!,
           _authData['password']!,
         );
@@ -150,7 +150,7 @@ class AuthCardState extends State<AuthCard> {
       // Navigator.of(context)
       //     .pushReplacementNamed(ProductsOverviewScreen.routeName);
     } on HttpException catch (error) {
-      var errorMessage = 'authentication faild';
+      var errorMessage = 'authentication failed';
       if ((error.toString().contains('EMAIL_EXISTS'))) {
         errorMessage = 'This email is already in use';
       } else if (error.toString().contains('INVALID_EMAIL')) {
@@ -178,7 +178,7 @@ class AuthCardState extends State<AuthCard> {
   void _switchAuthMode() {
     if (_authMode == AuthMode.Login) {
       setState(() {
-        _authMode = AuthMode.Signup;
+        _authMode = AuthMode.SignUp;
       });
     } else {
       setState(() {
@@ -196,9 +196,9 @@ class AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _authMode == AuthMode.SignUp ? 320 : 260,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _authMode == AuthMode.SignUp ? 320 : 260),
         width: deviceSize.width * 0.75,
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -233,13 +233,13 @@ class AuthCardState extends State<AuthCard> {
                     _authData['password'] = value!;
                   },
                 ),
-                if (_authMode == AuthMode.Signup)
+                if (_authMode == AuthMode.SignUp)
                   TextFormField(
-                    enabled: _authMode == AuthMode.Signup,
+                    enabled: _authMode == AuthMode.SignUp,
                     decoration:
                         const InputDecoration(labelText: 'Confirm Password'),
                     obscureText: true,
-                    validator: _authMode == AuthMode.Signup
+                    validator: _authMode == AuthMode.SignUp
                         ? (value) {
                             if (value != _passwordController.text) {
                               return 'Passwords do not match!';
