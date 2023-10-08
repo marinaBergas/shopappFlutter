@@ -10,6 +10,7 @@ import './screens/order_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/auth_screen.dart';
+import './screens/splash_screen.dart';
 import './providers/products_providers.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<Auth, Products>(
             update: (ctx, auth, previousProduct) =>
-                Products(auth.token!, auth.userId!, previousProduct!.items),
+                Products(auth.token, auth.userId, previousProduct!.items),
             create: (ctx) => Products('', '', []),
           ),
           ChangeNotifierProvider(
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
           // )
           ChangeNotifierProxyProvider<Auth, Orders>(
             update: (ctx, auth, previousOrder) =>
-                Orders(auth.token!, previousOrder!.orders, auth.userId!),
+                Orders(auth.token, previousOrder!.orders, auth.userId),
             create: (ctx) => Orders('', [], ''),
           )
         ],
@@ -78,7 +79,14 @@ class MyApp extends StatelessWidget {
                     const Color.fromARGB(255, 233, 219, 219)),
             home: auth.isAuth
                 ? const ProductsOverviewScreen()
-                : const AuthScreen(),
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? const SplashScreen()
+                            : const AuthScreen(),
+                  ),
             routes: {
               ProductDetailsScreen.routeName: (context) =>
                   const ProductDetailsScreen(),
