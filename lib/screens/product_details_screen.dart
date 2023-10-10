@@ -14,29 +14,36 @@ class ProductDetailsScreen extends StatelessWidget {
     final productId = (ModalRoute.of(context) as dynamic).settings.arguments;
     final currentProduct = Provider.of<Products>(context).findById(productId);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(currentProduct.title),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-                height: 300,
-                width: double.infinity,
-                child: Hero(
-                  tag: currentProduct.id,
-                  child: Image.network(
-                    currentProduct.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                )),
+      // appBar: AppBar(
+      //   title: Text(currentProduct.title),
+      //   backgroundColor: Theme.of(context).primaryColor,
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(currentProduct.title),
+              background: Hero(
+                tag: currentProduct.id,
+                child: Image.network(
+                  currentProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            backgroundColor: Colors.blue,
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
             const SizedBox(
               height: 10,
             ),
             Text(
               '\$${currentProduct.price}',
               style: const TextStyle(color: Colors.grey, fontSize: 20),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(
               height: 10,
@@ -49,9 +56,12 @@ class ProductDetailsScreen extends StatelessWidget {
                   currentProduct.description,
                   textAlign: TextAlign.center,
                   softWrap: true,
-                ))
-          ],
-        ),
+                )),
+            const SizedBox(
+              height: 800,
+            )
+          ])),
+        ],
       ),
     );
   }
