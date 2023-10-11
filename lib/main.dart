@@ -15,6 +15,7 @@ import './providers/products_providers.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
 import './providers/auth.dart';
+import './helpers/custom_route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -53,6 +54,10 @@ class MyApp extends StatelessWidget {
             title: 'Flutter My Shop',
             theme: ThemeData(
                 // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomePageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomePageTransitionBuilder(),
+                }),
                 colorScheme: ColorScheme.fromSwatch().copyWith(
                     secondary: Colors.deepOrange,
                     error: Colors.red // Your accent color
