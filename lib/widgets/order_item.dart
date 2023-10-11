@@ -18,48 +18,56 @@ class _OrderItemState extends State<OrderItem> {
   var _expanded = false;
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(5),
-      child: Column(
-        children: [
-          ListTile(
-            title: Text('\$${widget.order.amount}'),
-            subtitle: Text(
-                DateFormat('dd/MM/yyyy  hh:mm').format(widget.order.dateTime)),
-            trailing: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
-                icon: _expanded
-                    ? const Icon(Icons.expand_less)
-                    : const Icon(Icons.expand_more)),
-                    
-          ),
-          if (_expanded)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 4),
-              height: min(widget.order.products.length * 20 + 10, 100),
+    return AnimatedContainer(
+      curve: Curves.easeIn,
+      duration: const Duration(milliseconds: 300),
+      height:
+          _expanded ? min(widget.order.products.length * 20 + 130, 220) : 95,
+      child: Card(
+        margin: const EdgeInsets.all(5),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text('\$${widget.order.amount}'),
+              subtitle: Text(DateFormat('dd/MM/yyyy  hh:mm')
+                  .format(widget.order.dateTime)),
+              trailing: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _expanded = !_expanded;
+                    });
+                  },
+                  icon: _expanded
+                      ? const Icon(Icons.expand_less)
+                      : const Icon(Icons.expand_more)),
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: _expanded
+                  ? min(widget.order.products.length * 20 + 20, 120)
+                  : 0,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               child: ListView(
-                children: 
-                  widget.order.products
-                      .map((product) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(product.title,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                              Text('${product.quantity} X \$${product.price}',style: const TextStyle(color: Colors.grey,fontSize: 18),)
-                            ],
-                          ))
-                      .toList()
-                ,
+                children: widget.order.products
+                    .map((product) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(product.title,
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(
+                              '${product.quantity} X \$${product.price}',
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 18),
+                            )
+                          ],
+                        ))
+                    .toList(),
               ),
             )
-        ],
+          ],
+        ),
       ),
     );
   }
